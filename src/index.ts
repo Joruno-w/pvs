@@ -5,13 +5,17 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
 
-const __dirname = resolve(fileURLToPath(import.meta.url), '../');
+const __dirname = resolve(fileURLToPath(import.meta.url), "../");
 
 const version: string = JSON.parse(
   fs.readFileSync(`${__dirname}/b2c_public_components/package.json`, "utf-8")
 ).version;
 
-const author: { name: string; email: string } = (() => {
+type Config = {
+  [K in string]: `${K}-feature-${string}-${string}`;
+};
+
+const author = (() => {
   let name;
   let email;
   try {
@@ -109,13 +113,13 @@ const pushBranches = async (dir: string, branchName: string) => {
   });
 };
 
-const init = (config: Record<string, string>) => {
+const init = (config: Config = {}, name: string = "@zz-yp/b2c-ui") => {
   Object.entries(config).forEach(async ([projectName, branchName]) => {
     const dir = `${__dirname}/${projectName}`;
     // 处理分支
     await processBranches(dir, branchName);
     // 修改版本
-    await setKitVersion(dir, "@zz-yp/b2c-ui", version);
+    await setKitVersion(dir, name, version);
     // 推送分支
     await pushBranches(dir, branchName);
   });
