@@ -1,5 +1,5 @@
 # auto-git
-Starter template for TypeScript library
+a util for update b2c-ui version concurrently
 
 [![NPM version](https://img.shields.io/badge/npm-v1.0.0-red)](https://www.npmjs.com/package/pkg-name)
 
