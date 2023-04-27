@@ -5,11 +5,6 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
 
-// 配置类型
-type Config = {
-  [K: string]: `${string}-feature-${string}-${string}`;
-};
-
 // 获取git的用户名和邮箱
 const author = (() => {
   let name;
@@ -115,7 +110,10 @@ const pushBranches = async (dir: string, branchName: string) => {
 };
 
 // 初始化
-const init = (config: Config, name: string = "@zz-yp/b2c-ui") => {
+const init = (
+  config: Record<string, `${string}-feature-${string}-${string}`>,
+  name: string = "@zz-yp/b2c-ui"
+) => {
   Object.entries(config).forEach(async ([projectName, branchName]) => {
     const __dirname = resolve(fileURLToPath(import.meta.url), "../");
     const version: string = JSON.parse(
