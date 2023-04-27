@@ -7,10 +7,6 @@ import { execSync } from "node:child_process";
 
 const __dirname = resolve(fileURLToPath(import.meta.url), '../');
 
-const config: Record<string, string> = {
-  zlj_price_comparison_h5: "zlj_price_comparison_h5-feature-2879-26",
-};
-
 const version: string = JSON.parse(
   fs.readFileSync(`${__dirname}/b2c_public_components/package.json`, "utf-8")
 ).version;
@@ -113,7 +109,7 @@ const pushBranches = async (dir: string, branchName: string) => {
   });
 };
 
-const init = () => {
+const init = (config: Record<string, string>) => {
   Object.entries(config).forEach(async ([projectName, branchName]) => {
     const dir = `${__dirname}/${projectName}`;
     // 处理分支
@@ -126,5 +122,3 @@ const init = () => {
 };
 
 export default init;
-
-init();
