@@ -5,11 +5,12 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
 
-
+// 配置类型
 type Config = {
   [K: string]: `${string}-feature-${string}-${string}`;
 };
 
+// 获取git的用户名和邮箱
 const author = (() => {
   let name;
   let email;
@@ -23,6 +24,7 @@ const author = (() => {
   };
 })();
 
+// 创建分支
 const createBranch = async (dir: string, branchName: string) => {
   await git.checkout({
     fs,
@@ -44,6 +46,7 @@ const createBranch = async (dir: string, branchName: string) => {
   });
 };
 
+// 处理分支
 const processBranches = async (dir: string, branchName: string) => {
   const currentBranch = await git.currentBranch({
     fs,
@@ -76,12 +79,14 @@ const processBranches = async (dir: string, branchName: string) => {
   }
 };
 
+// 获取包的版本
 const getKitVersion = async (dir: string, kitName: string) => {
   const pkgPath = `${dir}/package.json`;
   const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf-8"));
   return pkg?.dependencies?.[kitName] || "";
 };
 
+// 设置包的版本
 const setKitVersion = async (dir: string, kitName: string, version: string) => {
   if ((await getKitVersion(dir, kitName)) === version) return;
   const pkgPath = `${dir}/package.json`;
@@ -90,6 +95,7 @@ const setKitVersion = async (dir: string, kitName: string, version: string) => {
   fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
 };
 
+// 推送分支
 const pushBranches = async (dir: string, branchName: string) => {
   await git.add({ fs, dir, filepath: "." });
   await git.commit({
@@ -108,6 +114,7 @@ const pushBranches = async (dir: string, branchName: string) => {
   });
 };
 
+// 初始化
 const init = (config: Config, name: string = "@zz-yp/b2c-ui") => {
   Object.entries(config).forEach(async ([projectName, branchName]) => {
     const __dirname = resolve(fileURLToPath(import.meta.url), "../");
