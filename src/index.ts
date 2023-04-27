@@ -5,14 +5,9 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
 
-const __dirname = resolve(fileURLToPath(import.meta.url), "../");
-
-const version: string = JSON.parse(
-  fs.readFileSync(`${__dirname}/b2c_public_components/package.json`, "utf-8")
-).version;
 
 type Config = {
-  [K in string]: `${K}-feature-${string}-${string}`;
+  [K: string]: `${string}-feature-${string}-${string}`;
 };
 
 const author = (() => {
@@ -113,8 +108,15 @@ const pushBranches = async (dir: string, branchName: string) => {
   });
 };
 
-const init = (config: Config = {}, name: string = "@zz-yp/b2c-ui") => {
+const init = (config: Config, name: string = "@zz-yp/b2c-ui") => {
   Object.entries(config).forEach(async ([projectName, branchName]) => {
+    const __dirname = resolve(fileURLToPath(import.meta.url), "../");
+    const version: string = JSON.parse(
+      fs.readFileSync(
+        `${__dirname}/b2c_public_components/package.json`,
+        "utf-8"
+      )
+    ).version;
     const dir = `${__dirname}/${projectName}`;
     // 处理分支
     await processBranches(dir, branchName);
