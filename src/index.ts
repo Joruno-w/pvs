@@ -7,12 +7,8 @@ import { execSync } from "node:child_process";
 
 // 获取git的用户名和邮箱
 const author = (() => {
-  let name;
-  let email;
-  try {
-    name = execSync("git config --global user.name");
-    email = execSync("git config --global user.email");
-  } catch (e) {}
+  const name = execSync("git config --global user.name");
+  const email = execSync("git config --global user.email");
   return {
     name: name?.toString("utf-8").replace(/\s/g, "") || "",
     email: email?.toString("utf-8").replace(/\s/g, "") || "",
