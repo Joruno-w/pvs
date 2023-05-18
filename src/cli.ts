@@ -34,10 +34,10 @@ const install = (projectPath: string) => {
 
 const pvs = async () => {
   const pkgPath = await getFullPath("package.json");
-  const { version, branchsConfig } = JSON.parse(
+  const { version, branches } = JSON.parse(
     await readFile(pkgPath, { encoding: "utf-8" })
   );
-  for await (const [project, branch] of Object.entries(branchsConfig)) {
+  for await (const [project, branch] of Object.entries(branches)) {
     if (!branch) continue;
     // find all project @zz-yp/b2c-ui version
     const projectPath = await getFullPath(project, "directory");
