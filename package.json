@@ -62,10 +62,12 @@
     "vitest": "^0.22.0"
   },
   "dependencies": {
+    "@types/prompts": "^2.4.4",
     "@types/shelljs": "^0.8.12",
     "find-up": "^6.3.0",
     "isomorphic-git": "^1.23.0",
     "kleur": "^4.1.5",
+    "prompts": "^2.4.2",
     "shelljs": "^0.8.5"
   }
 }
