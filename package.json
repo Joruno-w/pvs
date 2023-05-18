@@ -2,6 +2,9 @@
   "name": "auto-git",
   "type": "module",
   "version": "1.0.0",
+  "branchsConfig": {
+    "b2c_pop_detail": "b2c_pop_detail-feature-4191-3"
+  },
   "packageManager": "pnpm@7.9.5",
   "description": "",
   "author": "Joruno-w <1710642275@qq.com>",
@@ -59,6 +62,10 @@
     "vitest": "^0.22.0"
   },
   "dependencies": {
-    "isomorphic-git": "^1.23.0"
+    "@types/shelljs": "^0.8.12",
+    "find-up": "^6.3.0",
+    "isomorphic-git": "^1.23.0",
+    "kleur": "^4.1.5",
+    "shelljs": "^0.8.5"
   }
 }
