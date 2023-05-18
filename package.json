@@ -41,7 +41,7 @@
   "scripts": {
     "build": "unbuild",
     "dev": "unbuild --stub",
-    "lint": "eslint .",
+    "lint": "nx eslint .",
     "prepublishOnly": "nr build",
     "release": "bumpp && npm publish",
     "start": "esno src/index.ts",
@@ -49,6 +49,7 @@
     "pub": "npm publish"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^0.37.0",
     "@types/node": "^18.7.5",
     "bumpp": "^8.2.1",
     "eslint": "^8.22.0",
@@ -69,5 +70,8 @@
     "kleur": "^4.1.5",
     "prompts": "^2.4.2",
     "shelljs": "^0.8.5"
+  },
+  "eslintConfig": {
+    "extends": "@antfu"
   }
 }
