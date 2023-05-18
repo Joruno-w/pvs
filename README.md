@@ -3,9 +3,9 @@ a util for update b2c-ui version in many projects concurrently
 
 [![NPM version](https://img.shields.io/badge/npm-v1.0.0-red)](https://www.npmjs.com/package/pkg-name)
 
-## Condition
-- b2c_public_components Need to be in the same directory as other projects
-- need to create branches in beetle and working directory
+## prerequisite
+1. b2c_public_components Need to be in the same directory as other projects
+2. need to create branches in beetle and working directory
 
 ## License
 
