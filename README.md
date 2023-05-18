@@ -5,4 +5,4 @@ a util for update b2c-ui version concurrently
 
 ## License
 
-[MIT](./LICENSE) License © 2022 [Joruno-w](https://github.com/Joruno-w)
+[MIT](./LICENSE) License © 2023 [Joruno-w](https://github.com/Joruno-w)
