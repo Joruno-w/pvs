@@ -1,2 +1,2 @@
-export * from './cli'
-export * from './isomorphic'
+export { default as cli } from './cli'
+export { default as git } from './isomorphic'

@@ -41,12 +41,21 @@
   "scripts": {
     "build": "unbuild",
     "dev": "unbuild --stub",
-    "lint": "nx eslint .",
+    "lint": "eslint . --fix",
     "prepublishOnly": "nr build",
     "release": "bumpp && npm publish",
     "start": "esno src/index.ts",
     "test": "vitest",
     "pub": "npm publish"
+  },
+  "dependencies": {
+    "@types/prompts": "^2.4.4",
+    "@types/shelljs": "^0.8.12",
+    "find-up": "^6.3.0",
+    "isomorphic-git": "^1.23.0",
+    "kleur": "^4.1.5",
+    "prompts": "^2.4.2",
+    "shelljs": "^0.8.5"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.37.0",
@@ -61,15 +70,6 @@
     "urpm": "^0.0.4",
     "vite": "^3.0.7",
     "vitest": "^0.22.0"
-  },
-  "dependencies": {
-    "@types/prompts": "^2.4.4",
-    "@types/shelljs": "^0.8.12",
-    "find-up": "^6.3.0",
-    "isomorphic-git": "^1.23.0",
-    "kleur": "^4.1.5",
-    "prompts": "^2.4.2",
-    "shelljs": "^0.8.5"
   },
   "eslintConfig": {
     "extends": "@antfu"
