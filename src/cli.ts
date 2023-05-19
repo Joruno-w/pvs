@@ -20,21 +20,25 @@ const getFullPath = async (
 }
 
 // npm install
-const install = (projectPath: string) => {
+const install = (projectPath: string, name: string, version: string) => {
   const agent = pathExistsSync(`${projectPath}/pnpm-lock.yaml`)
     ? 'pnpm'
     : 'npm'
-  shell.exec(`${agent} i`)
+  shell.exec(`${agent} i ${name}@${version}`, { silent: true })
 }
 
 // update
-const updateProjectVersion = (projectPath: string, branch: string) => {
+const updateProjectVersion = (projectPath: string, branch: string, version: string) => {
   // change directory
-  if (shell.exec(`cd ${projectPath}`).code !== 0)
+  if (shell.exec(`cd ${projectPath}`, { silent: true }).code !== 0) {
+    shell.echo(c.red('进入项目出错'))
     shell.exit(1)
+  }
 
-  if (shell.exec(`git checkout ${branch}`).code !== 0)
+  if (shell.exec(`git checkout ${branch}`).code !== 0) {
+    shell.echo(c.red('切换分支出错'))
     shell.exit(1)
+  }
 
   // check working tree is clean
   const { stdout: statusStdout = [] } = shell.exec('git status --porcelain', {
@@ -48,21 +52,27 @@ const updateProjectVersion = (projectPath: string, branch: string) => {
     )
     shell.exit(1)
   }
-  // pull origin
-  if (shell.exec('git pull origin master').code !== 0)
-    shell.exit(1)
 
-  if (shell.exec('git pull').code !== 0)
+  // pull origin
+  if (shell.exec('git pull origin master', { silent: true }).code !== 0) {
+    shell.echo(c.red('拉取master代码出错'))
     shell.exit(1)
+  }
+
+  if (shell.exec('git pull', { silent: true }).code !== 0) {
+    shell.echo(c.red('拉取代码出错'))
+    shell.exit(1)
+  }
 
   // install
-  install(projectPath)
+  install(projectPath, '@zz-yp/b2c-ui', version)
+
   // push
   if (
     shell.exec('git add . && git commit -m"feat: 升级组件库" && git push')
       .code !== 0
   ) {
-    shell.echo(c.red('git access denied'))
+    shell.echo(c.red('git'))
     shell.exit(1)
   }
 }
@@ -109,7 +119,7 @@ const pvs = async () => {
     if (version === b2cUiVersion)
       continue
     // update all project b2c-ui version
-    updateProjectVersion(projectPath, branch)
+    updateProjectVersion(projectPath, branch, version)
   }
 }
 
