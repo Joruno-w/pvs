@@ -39,7 +39,7 @@
     "build": "unbuild",
     "dev": "unbuild --stub",
     "lint": "eslint . --fix",
-    "release": "bumpp && npm publish",
+    "release": "npm run build && bumpp && npm publish",
     "start": "esno src/index.ts",
     "test": "vitest",
     "pub": "npm publish"
