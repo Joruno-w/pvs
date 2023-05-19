@@ -2,9 +2,6 @@
   "name": "pvs",
   "type": "module",
   "version": "1.0.1",
-  "branchsConfig": {
-    "b2c_pop_detail": "b2c_pop_detail-feature-4191-3"
-  },
   "packageManager": "pnpm@7.9.5",
   "description": "",
   "author": "Joruno-w <1710642275@qq.com>",
