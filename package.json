@@ -12,7 +12,7 @@
     "url": "git+https://github.com/Joruno-w/auto-git.git"
   },
   "bugs": "https://github.com/Joruno-w/auto-git/issues",
-  "keywords": [],
+  "keywords": ["version", "sync"],
   "sideEffects": false,
   "exports": {
     ".": {
