@@ -48,8 +48,10 @@
     "@types/prompts": "^2.4.4",
     "@types/shelljs": "^0.8.12",
     "find-up": "^6.3.0",
+    "fs-extra": "^11.1.1",
     "isomorphic-git": "^1.23.0",
     "kleur": "^4.1.5",
+    "ora": "^6.3.1",
     "prompts": "^2.4.2",
     "shelljs": "^0.8.5"
   },
