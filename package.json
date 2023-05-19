@@ -48,6 +48,7 @@
     "pub": "npm publish"
   },
   "dependencies": {
+    "@types/fs-extra": "^11.0.1",
     "@types/prompts": "^2.4.4",
     "@types/shelljs": "^0.8.12",
     "find-up": "^6.3.0",

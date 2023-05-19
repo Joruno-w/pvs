@@ -1,22 +1,20 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { readFile } = require('node:fs/promises')
-const { resolve } = require('node:path')
-const shell = require('shelljs')
-const { pathExistsSync } = require('fs-extra')
-const c = require('kleur')
-const ora = require('ora')
-const prompts = require('prompts')
-const pkg = require('../package.json')
+import { existsSync, promises as fs } from 'node:fs'
+import { resolve } from 'node:path'
+import shell from 'shelljs'
+import c from 'kleur'
+import ora from 'ora'
+import prompts from 'prompts'
+import pkg from '../package.json'
 
 // 查找工程并获得其绝对路径
 const getFullPath = async (name: string) => {
   const pkgPath = resolve(process.cwd(), `../${name}`)
-  return pathExistsSync(pkgPath) ? pkgPath : ''
+  return existsSync(pkgPath) ? pkgPath : ''
 }
 
 // 安装新版组件库
 const install = (projectPath: any, name: string, version: any) => {
-  const agent = pathExistsSync(`${projectPath}/pnpm-lock.yaml`)
+  const agent = existsSync(`${projectPath}/pnpm-lock.yaml`)
     ? 'pnpm'
     : 'npm'
   const spinner = ora('Installing...').start()
@@ -111,7 +109,7 @@ const valiate = () => {
 // 版本同步
 const pvs = async () => {
   valiate()
-  const { version, branches } = pkg
+  const { version, branches } = pkg as any
   const { upgrade } = await prompts({
     type: 'confirm',
     name: 'upgrade',
@@ -126,7 +124,7 @@ const pvs = async () => {
     if (!projectPath)
       continue
     const { dependencies } = JSON.parse(
-      await readFile(`${projectPath}/package.json`, { encoding: 'utf-8' }),
+      await fs.readFile(`${projectPath}/package.json`, { encoding: 'utf-8' }),
     )
     const b2cUiVersion = dependencies['@zz-yp/b2c-ui']
     if (version === b2cUiVersion)
@@ -136,5 +134,3 @@ const pvs = async () => {
 }
 
 export default pvs
-
-module.exports = pvs
