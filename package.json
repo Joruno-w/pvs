@@ -1,5 +1,5 @@
 {
-  "name": "auto-git",
+  "name": "pvs",
   "type": "module",
   "version": "1.0.1",
   "branchsConfig": {
@@ -42,7 +42,6 @@
     "build": "unbuild",
     "dev": "unbuild --stub",
     "lint": "eslint . --fix",
-    "prepublishOnly": "nr build",
     "release": "bumpp && npm publish",
     "start": "esno src/index.ts",
     "test": "vitest",
