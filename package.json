@@ -1,7 +1,7 @@
 {
   "name": "auto-git",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "branchsConfig": {
     "b2c_pop_detail": "b2c_pop_detail-feature-4191-3"
   },
