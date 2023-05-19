@@ -104,7 +104,7 @@ const pvs = async () => {
   })
   if (!upgrade || !branches)
     process.exit(0)
-  for (const [project, branch] of Object.entries(branches)) {
+  for (const [project, branch] of Object.entries(brangsches)) {
     if (!branch)
       continue
     const projectPath = await getFullPath(project)
