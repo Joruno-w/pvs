@@ -1,65 +1,66 @@
-import { readFile } from 'node:fs/promises'
-import shell from 'shelljs'
-import c from 'kleur'
-import { findUp, pathExistsSync } from 'find-up'
-import prompts from 'prompts'
+/* eslint-disable @typescript-eslint/no-var-requires */
+const { readFile } = require('node:fs/promises')
+const { resolve } = require('node:path')
+const shell = require('shelljs')
+const { pathExistsSync } = require('fs-extra')
+const c = require('kleur')
+const ora = require('ora')
+const prompts = require('prompts')
+const pkg = require('../package.json')
 
-interface B2C_PKG {
-  version: string
-  branches?: Record<string, `${string}-feature-${string}-${string}`>
-  [key: string]: any
-}
-
-// search projects & get project full path
-const getFullPath = async (
-  name: string,
-  type: 'file' | 'directory' = 'file',
-) => {
-  const pkgPath = (await findUp(name, { type })) as string
+// 查找工程并获得其绝对路径
+const getFullPath = async (name: string) => {
+  const pkgPath = resolve(process.cwd(), `../${name}`)
   return pathExistsSync(pkgPath) ? pkgPath : ''
 }
 
-// npm install
-const install = (projectPath: string, name: string, version: string) => {
-  const agent = pathExistsSync(`${projectPath}/pnpm-lock.yaml`)
-    ? 'pnpm'
-    : 'npm'
-  shell.exec(`${agent} i ${name}@${version}`, { silent: true })
+// 安装新版组件库
+const install = (projectPath: any, name: string, version: any) => {
+  const agent = pathExistsSync(`${projectPath}/pnpm-lock.yaml`) ? 'pnpm' : 'npm'
+  const spinner = ora('Installing...').start()
+  shell.exec(
+    `cd ${projectPath} && ${agent} i ${name}@${version}`,
+    {
+      silent: true,
+    },
+    (code: number, stdout: string | string[], _: any) => {
+      // 判断命令是否执行完毕
+      if (code === 0 && stdout.includes('up to date'))
+        spinner.text = 'Install finished'
+
+      else
+        spinner.text = 'Install failed'
+
+      spinner.stop()
+    },
+  )
 }
 
-// update
-const updateProjectVersion = (projectPath: string, branch: string, version: string) => {
-  // change directory
-  if (shell.exec(`cd ${projectPath}`, { silent: true }).code !== 0) {
-    shell.echo(c.red('进入项目出错'))
-    shell.exit(1)
-  }
-
-  if (shell.exec(`git checkout ${branch}`).code !== 0) {
+// 更新所有工程的组件库版本
+const updateProjectVersion = (projectPath: any, branch: unknown, version: any) => {
+  if (shell.exec(`cd ${projectPath} && git checkout ${branch}`).code !== 0) {
     shell.echo(c.red('切换分支出错'))
     shell.exit(1)
   }
 
-  // check working tree is clean
-  const { stdout: statusStdout = [] } = shell.exec('git status --porcelain', {
+  // 检查git当前工作区状态是否干净
+  const { stdout: statusStdout = [] } = shell.exec(`cd ${projectPath} && git status --porcelain`, {
     silent: true,
   })
   if (statusStdout.length > 0) {
     shell.echo(
-      c.red(
-        'Git当前工作区状态不是 clean，请确认！或者通过加 GIT_CHECK=none 环境变量跳过检查！',
-      ),
+      c.red('Git当前工作区状态不是 clean，请确认！或者通过加 GIT_CHECK=none 环境变量跳过检查！'),
     )
     shell.exit(1)
   }
 
   // pull origin
-  if (shell.exec('git pull origin master', { silent: true }).code !== 0) {
+  if (shell.exec(`cd ${projectPath} && git pull origin master`, { silent: true }).code !== 0) {
     shell.echo(c.red('拉取master代码出错'))
     shell.exit(1)
   }
 
-  if (shell.exec('git pull', { silent: true }).code !== 0) {
+  if (shell.exec(`cd ${projectPath} && git pull`, { silent: true }).code !== 0) {
     shell.echo(c.red('拉取代码出错'))
     shell.exit(1)
   }
@@ -69,35 +70,33 @@ const updateProjectVersion = (projectPath: string, branch: string, version: stri
 
   // push
   if (
-    shell.exec('git add . && git commit -m"feat: 升级组件库" && git push')
+    shell.exec(`cd ${projectPath} && git add . && git commit -m"feat: 升级组件库" && git push`)
       .code !== 0
   ) {
-    shell.echo(c.red('git'))
+    shell.echo(c.red('提交代码出错'))
     shell.exit(1)
   }
 }
 
-// valiate
+// 验证
 const valiate = () => {
-  // detect git command exists
+  // 检查git命令是否存在
   if (!shell.which('git')) {
-    shell.echo(c.red('git command not found'))
+    shell.echo(c.red('git命令不存在'))
     shell.exit(1)
   }
 
-  // detect git access
+  // 检查git权限是否存在
   if (shell.exec('git push', { silent: true }).code !== 0) {
-    shell.echo(c.red('git access denied'))
+    shell.echo(c.red('git权限不存在'))
     shell.exit(1)
   }
 }
 
+// 版本同步
 const pvs = async () => {
   valiate()
-  const pkgPath = await getFullPath('package.json')
-  const { version, branches } = JSON.parse(
-    await readFile(pkgPath, { encoding: 'utf-8' }),
-  ) as B2C_PKG
+  const { version, branches } = pkg
   const { upgrade } = await prompts({
     type: 'confirm',
     name: 'upgrade',
@@ -105,11 +104,10 @@ const pvs = async () => {
   })
   if (!upgrade || !branches)
     process.exit(0)
-  for await (const [project, branch] of Object.entries(branches)) {
+  for (const [project, branch] of Object.entries(branches)) {
     if (!branch)
       continue
-    // find all project @zz-yp/b2c-ui version
-    const projectPath = await getFullPath(project, 'directory')
+    const projectPath = await getFullPath(project)
     if (!projectPath)
       continue
     const { dependencies } = JSON.parse(
@@ -118,9 +116,8 @@ const pvs = async () => {
     const b2cUiVersion = dependencies['@zz-yp/b2c-ui']
     if (version === b2cUiVersion)
       continue
-    // update all project b2c-ui version
     updateProjectVersion(projectPath, branch, version)
   }
 }
 
-export default pvs
+module.exports = pvs
