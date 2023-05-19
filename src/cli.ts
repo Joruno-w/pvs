@@ -120,4 +120,6 @@ const pvs = async () => {
   }
 }
 
+export default pvs
+
 module.exports = pvs
