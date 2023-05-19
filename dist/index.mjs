@@ -32,12 +32,17 @@ const updateProjectVersion = (projectPath, branch, version) => {
     shell.echo(c.red("\u5207\u6362\u5206\u652F\u51FA\u9519"));
     shell.exit(1);
   }
-  const { stdout: statusStdout = [] } = shell.exec(`cd ${projectPath} && git status --porcelain`, {
-    silent: true
-  });
+  const { stdout: statusStdout = [] } = shell.exec(
+    `cd ${projectPath} && git status --porcelain`,
+    {
+      silent: true
+    }
+  );
   if (statusStdout.length > 0) {
     shell.echo(
-      c.red("Git\u5F53\u524D\u5DE5\u4F5C\u533A\u72B6\u6001\u4E0D\u662F clean\uFF0C\u8BF7\u786E\u8BA4\uFF01\u6216\u8005\u901A\u8FC7\u52A0 GIT_CHECK=none \u73AF\u5883\u53D8\u91CF\u8DF3\u8FC7\u68C0\u67E5\uFF01")
+      c.red(
+        "Git\u5F53\u524D\u5DE5\u4F5C\u533A\u72B6\u6001\u4E0D\u662F clean\uFF0C\u8BF7\u786E\u8BA4\uFF01\u6216\u8005\u901A\u8FC7\u52A0 GIT_CHECK=none \u73AF\u5883\u53D8\u91CF\u8DF3\u8FC7\u68C0\u67E5\uFF01"
+      )
     );
     shell.exit(1);
   }
@@ -50,7 +55,9 @@ const updateProjectVersion = (projectPath, branch, version) => {
     shell.exit(1);
   }
   install(projectPath, "@zz-yp/b2c-ui", version);
-  if (shell.exec(`cd ${projectPath} && git add . && git commit -m"feat: \u5347\u7EA7\u7EC4\u4EF6\u5E93" && git push`).code !== 0) {
+  if (shell.exec(
+    `cd ${projectPath} && git add . && git commit -m"feat: \u5347\u7EA7\u7EC4\u4EF6\u5E93" && git push`
+  ).code !== 0) {
     shell.echo(c.red("\u63D0\u4EA4\u4EE3\u7801\u51FA\u9519"));
     shell.exit(1);
   }
@@ -71,7 +78,7 @@ const pvs = async () => {
   const { upgrade } = await prompts({
     type: "confirm",
     name: "upgrade",
-    message: "Do you want to upgrade the associated projects ?"
+    message: "\u4F60\u786E\u5B9A\u8981\u5347\u7EA7\u5173\u8054\u7684\u5DE5\u7A0B\u5417\uFF1F"
   });
   if (!upgrade || !branches)
     process.exit(0);
