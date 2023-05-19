@@ -82,7 +82,6 @@ const pvs = async () => {
     updateProjectVersion(projectPath, branch);
   }
 };
-module.exports = pvs;
 
 const author = (() => {
   const name = execSync("git config --global user.name");

@@ -95,7 +95,6 @@ const pvs = async () => {
     updateProjectVersion(projectPath, branch);
   }
 };
-module.exports = pvs;
 
 const author = (() => {
   const name = node_child_process.execSync("git config --global user.name");
