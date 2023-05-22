@@ -1,5 +1,6 @@
 import { existsSync, promises as fs } from 'node:fs'
 import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import shell from 'shelljs'
 import c from 'kleur'
 import ora from 'ora'
@@ -8,15 +9,13 @@ import pkg from '../package.json'
 
 // 查找工程并获得其绝对路径
 const getFullPath = async (name: string) => {
-  const pkgPath = resolve(process.cwd(), `../${name}`)
+  const pkgPath = resolve(fileURLToPath(import.meta.url), `../${name}`)
   return existsSync(pkgPath) ? pkgPath : ''
 }
 
 // 安装新版组件库
 const install = (projectPath: any, name: string, version: any) => {
-  const agent = existsSync(`${projectPath}/pnpm-lock.yaml`)
-    ? 'pnpm'
-    : 'npm'
+  const agent = existsSync(`${projectPath}/pnpm-lock.yaml`) ? 'pnpm' : 'npm'
   const spinner = ora('Installing...').start()
   shell.exec(
     `cd ${projectPath} && ${agent} i ${name}@${version}`,
