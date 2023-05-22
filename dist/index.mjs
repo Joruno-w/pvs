@@ -1,17 +1,118 @@
-const { readFile } = require("node:fs/promises");
-const { resolve } = require("node:path");
-const shell = require("shelljs");
-const { pathExistsSync } = require("fs-extra");
-const c = require("kleur");
-const ora = require("ora");
-const prompts = require("prompts");
-const pkg = require("../package.json");
+import { promises, existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+import shell from 'shelljs';
+import c from 'kleur';
+import ora from 'ora';
+import prompts from 'prompts';
+
+const name = "pvs";
+const type = "module";
+const version = "1.0.16";
+const packageManager = "pnpm@7.9.5";
+const description = "";
+const author = "Joruno-w <1710642275@qq.com>";
+const license = "MIT";
+const homepage = "https://github.com/Joruno-w/auto-git#readme";
+const repository = {
+	type: "git",
+	url: "git+https://github.com/Joruno-w/auto-git.git"
+};
+const bugs = "https://github.com/Joruno-w/auto-git/issues";
+const keywords = [
+	"version",
+	"sync"
+];
+const sideEffects = false;
+const exports = {
+	".": {
+		types: "./dist/index.d.ts",
+		require: "./dist/index.cjs",
+		"import": "./dist/index.mjs"
+	}
+};
+const main = "./dist/index.mjs";
+const module = "./dist/index.mjs";
+const types = "./dist/index.d.ts";
+const typesVersions = {
+	"*": {
+		"*": [
+			"./dist/*",
+			"./dist/index.d.ts"
+		]
+	}
+};
+const files = [
+	"dist"
+];
+const scripts = {
+	build: "unbuild",
+	dev: "unbuild --stub",
+	lint: "eslint . --fix",
+	release: "npm run build && bumpp && npm publish && esno ./changeVersion.ts",
+	start: "esno src/index.ts",
+	test: "vitest",
+	pub: "npm publish"
+};
+const dependencies = {
+	"@types/fs-extra": "^11.0.1",
+	"@types/prompts": "^2.4.4",
+	"@types/shelljs": "^0.8.12",
+	"find-up": "^6.3.0",
+	"fs-extra": "^11.1.1",
+	"isomorphic-git": "^1.23.0",
+	kleur: "^4.1.5",
+	ora: "^6.3.1",
+	prompts: "^2.4.2",
+	shelljs: "^0.8.5"
+};
+const devDependencies = {
+	"@antfu/eslint-config": "^0.37.0",
+	"@types/node": "^18.7.5",
+	bumpp: "^8.2.1",
+	eslint: "^8.22.0",
+	esno: "^0.16.3",
+	pnpm: "^7.9.0",
+	rimraf: "^3.0.2",
+	typescript: "^4.7.4",
+	unbuild: "^0.8.8",
+	urpm: "^0.0.4",
+	vite: "^3.0.7",
+	vitest: "^0.22.0"
+};
+const eslintConfig = {
+	"extends": "@antfu"
+};
+const pkg = {
+	name: name,
+	type: type,
+	version: version,
+	packageManager: packageManager,
+	description: description,
+	author: author,
+	license: license,
+	homepage: homepage,
+	repository: repository,
+	bugs: bugs,
+	keywords: keywords,
+	sideEffects: sideEffects,
+	exports: exports,
+	main: main,
+	module: module,
+	types: types,
+	typesVersions: typesVersions,
+	files: files,
+	scripts: scripts,
+	dependencies: dependencies,
+	devDependencies: devDependencies,
+	eslintConfig: eslintConfig
+};
+
 const getFullPath = async (name) => {
   const pkgPath = resolve(process.cwd(), `../${name}`);
-  return pathExistsSync(pkgPath) ? pkgPath : "";
+  return existsSync(pkgPath) ? pkgPath : "";
 };
 const install = (projectPath, name, version) => {
-  const agent = pathExistsSync(`${projectPath}/pnpm-lock.yaml`) ? "pnpm" : "npm";
+  const agent = existsSync(`${projectPath}/pnpm-lock.yaml`) ? "pnpm" : "npm";
   const spinner = ora("Installing...").start();
   shell.exec(
     `cd ${projectPath} && ${agent} i ${name}@${version}`,
@@ -89,7 +190,7 @@ const pvs = async () => {
     if (!projectPath)
       continue;
     const { dependencies } = JSON.parse(
-      await readFile(`${projectPath}/package.json`, { encoding: "utf-8" })
+      await promises.readFile(`${projectPath}/package.json`, { encoding: "utf-8" })
     );
     const b2cUiVersion = dependencies["@zz-yp/b2c-ui"];
     if (version === b2cUiVersion)
@@ -97,6 +198,5 @@ const pvs = async () => {
     updateProjectVersion(projectPath, branch, version);
   }
 };
-module.exports = pvs;
 
 export { pvs as cli };

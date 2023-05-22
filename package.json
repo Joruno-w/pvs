@@ -1,7 +1,7 @@
 {
   "name": "pvs",
   "type": "module",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "packageManager": "pnpm@7.9.5",
   "description": "",
   "author": "Joruno-w <1710642275@qq.com>",
@@ -42,7 +42,7 @@
     "build": "unbuild",
     "dev": "unbuild --stub",
     "lint": "eslint . --fix",
-    "release": "npm run build && bumpp && npm publish",
+    "release": "npm run build && bumpp && npm publish && esno ./src/changeVersion",
     "start": "esno src/index.ts",
     "test": "vitest",
     "pub": "npm publish"

@@ -105,7 +105,7 @@ const valiate = () => {
   }
 }
 
-// 版本同步
+// 版本同步（pkg version sync）
 const pvs = async () => {
   valiate()
   const { version, branches } = pkg as any
