@@ -7,6 +7,8 @@ import ora from 'ora'
 import prompts from 'prompts'
 import pkg from '../package.json'
 
+let spinner = null
+
 // 查找工程并获得其绝对路径
 const getFullPath = async (name: string) => {
   const pkgPath = resolve(fileURLToPath(import.meta.url), `../${name}`)
@@ -15,7 +17,7 @@ const getFullPath = async (name: string) => {
 
 // 安装新版组件库
 const install = (projectPath, name, version) => {
-  const agent = pathExistsSync(`${projectPath}/pnpm-lock.yaml`) ? 'pnpm' : 'npm'
+  const agent = existsSync(`${projectPath}/pnpm-lock.yaml`) ? 'pnpm' : 'npm'
   spinner = ora('正在安装新版组件库...').start()
   const res = shell.exec(`cd ${projectPath} && ${agent} i ${name}@${version}`, {
     silent: true,
@@ -69,6 +71,7 @@ const updateProjectVersion = (projectPath, branch, version) => {
           async: true,
         }
       )
+      if(!st) shell.exit(1)
       st.on('data', () => {
         shell.echo(c.green('推送成功!'))
       })
